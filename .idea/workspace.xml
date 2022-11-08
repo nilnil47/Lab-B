@@ -4,7 +4,6 @@
     <list default="true" id="b91703c4-6eb3-4887-9e0f-5cffcd5161bc" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/magnetisem/code/R.csv" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/magnetisem/code/b4.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/magnetisem/code/magnetise.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/magnetisem/code/magnetise.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +49,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1667747888061</updated>
-      <workItem from="1667748359482" duration="15871000" />
+      <workItem from="1667748359482" duration="16655000" />
     </task>
     <servers />
   </component>
