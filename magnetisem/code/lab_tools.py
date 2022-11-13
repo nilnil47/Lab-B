@@ -4,7 +4,27 @@ import hvplot.pandas  # noqa
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
-pd.set_option('display.precision', 10)
+# pd.set_option('display.precision', 10)
+
+def show_multiple_graphs(d):
+    fig, axs = plt.subplots(1, 4, figsize=(9, 3), sharey=True)
+    for n, (k, v) in enumerate(d.items()):
+        axs[n-1].plot(v['x'], v['y'])
+
+def a():
+    pass
+
+def convert_number_to_other_base(n, base):
+    """
+    Converts a number to another base
+    n - the number to convert
+    base - the base to convert to
+    """
+
+    if n < base:
+        return [n]
+    else:
+        return convert_number_to_other_base(n // base, base) + [n % base]
 
 def load_data(path):
     df = pd.read_csv(path, header=None, usecols=[3,4,10], names=['t', 'x', 'y'])
@@ -62,3 +82,7 @@ def findzeros(xaxis,yaxis):
             positivezero[1] = yaxis[k]
             positivezero[0] = xaxis[k]
     return (positivezero,negativezero)
+
+def find_hardness(xaxis,yaxis):
+    positivezero,negativezero = findzeros(xaxis,yaxis)
+    return abs(positivezero[0] - negativezero[0]) / 2
