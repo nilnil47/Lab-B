@@ -6,6 +6,9 @@ from scipy.optimize import curve_fit
 
 pd.set_option('display.precision', 10)
 
+def load_data(path):
+    df = pd.read_csv(path, header=None, usecols=[3,4,10], names=['t', 'x', 'y'])
+    return df
 
 def harmonic(t, a, w, p):
     return a * np.cos(w * t + p)
