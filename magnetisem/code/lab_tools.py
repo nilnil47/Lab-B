@@ -115,7 +115,8 @@ def read_to_dict(file):
     data_dict = {}
     for x in csv_files:
         path = os.path.join(file, x)
-        data_dict[os.path.splitext(os.path.basename(path))[0]] = load_data(x)
+        data_dict[os.path.splitext(os.path.basename(path))[0]] = load_data(path)
+
     return data_dict
 
 
