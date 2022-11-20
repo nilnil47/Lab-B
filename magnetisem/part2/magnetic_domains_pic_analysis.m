@@ -1,11 +1,11 @@
 % Enter folder name, don't forget the \ at the end of the path
 folder = "/Users/user/Documents/semster_c/courses/lab/magnetisem/part2/week3/ex2/forward/";
-bmpFiles = ls(folder + "*.bmp");
+bmpFiles = dir(folder + "*.bmp");
+
 % % Batch 1
 % firstPicNum = 4;
 % maxVoltage = 4;
 % Batch 2
-firstPicNum = 90;
 maxVoltage = 5;
 % % Batch 3
 % firstPicNum = 240;
@@ -15,15 +15,12 @@ bwValuesLow = [];
 bwValuesHigh = [];
 bwValues = [];
 grayThreshes = [];
-voltages = -maxVoltage:0.2:maxVoltage;
+voltages = [];
 
-for i = firstPicNum : size(bmpFiles,1) + firstPicNum - 1
-    image = imread(strcat(folder,"Capture_",int2str(i),".bmp"));
+for i = 1 : size(bmpFiles,1)
+    image = imread(strcat(bmpFiles(i).folder ,'/' ,bmpFiles(i).name));
     grayThreshes(end+1) = graythresh(image);
-%     if mod(i,7) == 0
-%         figure
-%        imshowpair(image,imageBW,'montage') 
-%     end
+
 end
 g = grayThreshes;
 grayThreshes(find(grayThreshes > max(grayThreshes)-0.02)) = [];
@@ -31,8 +28,10 @@ grayThreshes(find(grayThreshes < min(grayThreshes)+0.02)) = [];
 threshold = mean(grayThreshes);
 thresholdSTD = std(grayThreshes);
 
-for i = firstPicNum : size(bmpFiles,1) + firstPicNum - 1
-    image = imread(strcat(folder,"Capture_",int2str(i),".bmp"));
+for i = 1 : size(bmpFiles,1)
+    image = imread(strcat(bmpFiles(i).folder ,'/' ,bmpFiles(i).name));
+    [filepath,name,ext] = fileparts(bmpFiles(i).name);
+    voltages = [voltages, str2num(name)];
     imageBW = imbinarize(image,threshold);
     bwValues(end+1) = mean(imageBW,'all');
     imageBWLow = imbinarize(image,threshold + thresholdSTD);
@@ -40,6 +39,7 @@ for i = firstPicNum : size(bmpFiles,1) + firstPicNum - 1
     imageBWHigh = imbinarize(image,threshold - thresholdSTD);
     bwValuesHigh(end+1) = mean(imageBWHigh,'all');
 end
+
 bwDeltaPos = bwValuesHigh - bwValues;
 bwDeltaNeg = bwValues - bwValuesLow;
 bwFirst = bwValues(1:size(voltages,2));
