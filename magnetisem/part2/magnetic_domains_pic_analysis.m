@@ -20,8 +20,8 @@ voltages = [];
 for i = 1 : size(bmpFiles,1)
     image = imread(strcat(bmpFiles(i).folder ,'/' ,bmpFiles(i).name));
     grayThreshes(end+1) = graythresh(image);
-
 end
+
 g = grayThreshes;
 grayThreshes(find(grayThreshes > max(grayThreshes)-0.02)) = [];
 grayThreshes(find(grayThreshes < min(grayThreshes)+0.02)) = [];
