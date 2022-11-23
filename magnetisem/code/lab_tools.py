@@ -10,6 +10,11 @@ def show_multiple_graphs(d):
     fig, axs = plt.subplots(1, 4, figsize=(9, 3), sharey=True)
     for n, (k, v) in enumerate(d.items()):
         axs[n-1].plot(v['x'], v['y'])
+        axs[n-1].set_title(k)
+        plt.grid()
+        plt.xlabel(r'$V_{x} \propto H [V]^$')
+        plt.ylabel(r'$V_x$')
+        
 
 def a():
     pass
