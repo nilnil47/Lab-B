@@ -110,11 +110,11 @@ def find_peak(y_axis, x_axis):
     return peak
 
 
-def read_to_dict(file):
-    csv_files = os.listdir(file)
+def read_to_dict(folder):
+    csv_files = os.listdir(folder)
     data_dict = {}
     for x in csv_files:
-        path = os.path.join(file, x)
+        path = os.path.join(folder, x)
         data_dict[os.path.splitext(os.path.basename(path))[0]] = load_data(path)
 
     return data_dict
