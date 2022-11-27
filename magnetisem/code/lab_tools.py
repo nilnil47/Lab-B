@@ -113,3 +113,18 @@ def read_to_dict(folder):
         data_dict[os.path.splitext(os.path.basename(path))[0]] = load_data(path)
 
     return data_dict
+
+
+def find_hardness(xaxis, yaxis):
+    positivezero, negativezero = findzeros(xaxis, yaxis)
+    return abs(positivezero[0] - negativezero[0]) / 2
+
+
+def find_peak(y_axis, x_axis):
+    peak = [x_axis[1], y_axis[1]]
+    for k in range(len(y_axis)):
+        if y_axis[k] >= peak[1]:
+            peak[1] = y_axis[k]
+            peak[0] = x_axis[k]
+    return peak
+
