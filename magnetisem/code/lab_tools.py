@@ -7,6 +7,7 @@ from sklearn.metrics import r2_score
 import os
 import logging
 
+logging.basicConfig(level=logging.WARNING)
 
 # pd.set_option('display.precision', 10)
 
@@ -47,11 +48,16 @@ def harmonic(t, a, w, p, c):
 
 
 def harmonic_fit(df, x='t', y='x', a0=3, w0=1.1, p0=0, c0=0, display=False):
-    fit_params, covariances = curve_fit(harmonic, df[x], df[y], p0=[a0, w0, p0, c0],
-                                        bounds=([0, 0, -2 * np.pi, -np.inf], [np.inf, np.inf, 2 * np.pi, np.inf]))
-
+    try:
+        fit_params, covariances = curve_fit(harmonic, df[x], df[y], p0=[a0, w0, p0, c0],
+                                            bounds=([0, 0, -2 * np.pi, -np.inf], [np.inf, np.inf, 2 * np.pi, np.inf]))
+    except RuntimeError:
+        logging.warning(f"fit failed for frequency {w0}")
+        return None
+        
     fit = harmonic(df[x], *fit_params)
     r_squred = r2_score(df[y], fit)
+    
     if r_squred < 0.90:
         print(f"Warning: R^2 is {r_squred}: for frequency{w0}")
 
@@ -77,22 +83,34 @@ def find_phase_shift_index(df, p1, p2, w):
     print(f"to index is {n}")
     return n
 
-def find_phase_shift(df, w, a0_1=1, p0_1=0, c0_1=0, a0_2=1, p0_2=0, c0_2=0, display=True):
+def extract_data_from_fit(func_dict, df, w, a0_1=1, p0_1=0, c0_1=0, a0_2=1, p0_2=0, c0_2=0, display=True, limit=None):
     params_1 = harmonic_fit(df, x='t', y='x', a0=a0_1, w0=2*np.pi*w, p0=p0_1, c0=c0_1, display=display)
     params_2 = harmonic_fit(df, x='t', y='y', a0=a0_2, w0=2*np.pi*w, p0=p0_2, c0=c0_1, display=display)
 
-    p1 = params_1[2]
-    p2 = params_2[2]
+    if params_1 is None or params_2 is None:
+        print(f"fit failed for frequency {w}")
+        return None
 
-    w1 = params_1[1]
-    w2 = params_2[1]
+    a1, w1, p1, c1  = tuple(params_1)
+    a2, w2, p2, c2  = tuple(params_2)
 
     if np.abs(w1 - w2) / w2 > 0.05:
         print(f"Warning: frequencies are not the same for frequenciy {w}")
         return None
 
-    f = 2 * np.pi / w 
-    return  f * (p1 - p2)
+    result_dict = {}
+
+    for name, func in func_dict.items():
+        
+        val  = func(w,a1,p1,c1,a2,p2,c2)
+        
+        if limit and name in limit:
+            if val > limit[name][1] or val < limit[name][0]:
+                logging.warning(f"{name} is out of range for frequency {w}")
+                return None
+        result_dict[name] = val
+
+    return result_dict
 
 
 
@@ -137,7 +155,10 @@ def read_to_dict(folder):
     data_dict = {}
     for x in csv_files:
         path = os.path.join(folder, x)
-        data_dict[os.path.splitext(os.path.basename(path))[0]] = load_data(path)
+        try:
+            data_dict[os.path.splitext(os.path.basename(path))[0]] = load_data(path)
+        except:
+            print(f"Error reading file {path}")
 
     return data_dict
 
@@ -157,17 +178,41 @@ def find_peak(y_axis, x_axis):
 
 def main():
     print(os.getcwd())
-    path4 = '/Users/user/Documents/semster_c/courses/lab/magnetisem/extension2/high_freq/'
+    path4 = '/Users/user/Documents/semster_c/courses/lab/magnetisem/extension2/first/'
 
     path = '../extension2/first/'
     path2 = '../extension2/second/'
-    path3 = '../extension2/3/'
+    path3 = '../extension2/all/'
 
     # d = lab_tools.read_to_dict(path)
     d = read_to_dict(path4)
-    p = d['1336600']
-    print (find_phase_shift(p, 1336600))
+    phases = []
+    frequencies = []
+    amplitudes = []
 
+    def find_phase(w,a1,p1,c1,a2,p2,c2):
+        f = 2 * np.pi / w 
+        return f * (p1 - p2)
+
+    def find_z(w,a1,p1,c1,a2,p2,c2):
+        return a2 / a1 
+
+    funcs = {'phase': find_phase, 'z': find_z}
+    limits = {'z': [0, 10000]}
+
+    for freq, df in d.items():
+        freq = float(freq)
+        logging.info(f"frequency is {freq}")
+        result = extract_data_from_fit(funcs, df, freq, display=False)
+
+        if result:
+            frequencies.append(float(freq))
+            phases.append(result['phase'])
+            amplitudes.append(result['z'])
+    
+    print (frequencies)
+    print (phases)
+    print (amplitudes)
 
 if __name__ == '__main__':
     main()
