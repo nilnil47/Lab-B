@@ -3,7 +3,9 @@ import numpy as np
 import hvplot.pandas  # noqa
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+from sklearn.metrics import r2_score
 import os
+import logging
 
 
 # pd.set_option('display.precision', 10)
@@ -40,24 +42,31 @@ def load_data(path):
     return df
 
 
-def harmonic(t, a, w, p):
-    return a * np.cos(w * t + p)
+def harmonic(t, a, w, p, c):
+    return a * np.cos(w * t + p) + c 
 
 
-def harmonic_fit(df, x='t', y='x', a0=3, w0=1.1, p0=0):
-    fit_params, covariances = curve_fit(harmonic, df[x], df[y], p0=[a0, w0, p0],
-                                        bounds=([0, 0, -2 * np.pi], [np.inf, np.inf, 2 * np.pi]))
+def harmonic_fit(df, x='t', y='x', a0=3, w0=1.1, p0=0, c0=0, display=False):
+    fit_params, covariances = curve_fit(harmonic, df[x], df[y], p0=[a0, w0, p0, c0],
+                                        bounds=([0, 0, -2 * np.pi, -np.inf], [np.inf, np.inf, 2 * np.pi, np.inf]))
 
-    fit = harmonic(df['t'], *fit_params)
+    fit = harmonic(df[x], *fit_params)
+    r_squred = r2_score(df[y], fit)
+    if r_squred < 0.90:
+        print(f"Warning: R^2 is {r_squred}: for frequency{w0}")
 
-    f1 = plt.figure()
-    plt.plot(df[x], fit)
-    plt.plot(df[x], df[y])
+    if display:
+
+        f1 = plt.figure()
+        plt.plot(df[x], fit)
+        plt.plot(df[x], df[y])
+        plt.show()
+    
 
     return fit_params
 
 
-def find_phase_shift(df, p1, p2, w):
+def find_phase_shift_index(df, p1, p2, w):
     t = df['t']
 
     t0 = abs(p1 - p2) / w
@@ -67,6 +76,24 @@ def find_phase_shift(df, p1, p2, w):
     n = difference_array.argmin()
     print(f"to index is {n}")
     return n
+
+def find_phase_shift(df, w, a0_1=1, p0_1=0, c0_1=0, a0_2=1, p0_2=0, c0_2=0, display=True):
+    params_1 = harmonic_fit(df, x='t', y='x', a0=a0_1, w0=2*np.pi*w, p0=p0_1, c0=c0_1, display=display)
+    params_2 = harmonic_fit(df, x='t', y='y', a0=a0_2, w0=2*np.pi*w, p0=p0_2, c0=c0_1, display=display)
+
+    p1 = params_1[2]
+    p2 = params_2[2]
+
+    w1 = params_1[1]
+    w2 = params_2[1]
+
+    if np.abs(w1 - w2) / w2 > 0.05:
+        print(f"Warning: frequencies are not the same for frequenciy {w}")
+        return None
+
+    f = 2 * np.pi / w 
+    return  f * (p1 - p2)
+
 
 
 def fix_phase_shift(df, n):
@@ -128,3 +155,19 @@ def find_peak(y_axis, x_axis):
             peak[0] = x_axis[k]
     return peak
 
+def main():
+    print(os.getcwd())
+    path4 = '/Users/user/Documents/semster_c/courses/lab/magnetisem/extension2/high_freq/'
+
+    path = '../extension2/first/'
+    path2 = '../extension2/second/'
+    path3 = '../extension2/3/'
+
+    # d = lab_tools.read_to_dict(path)
+    d = read_to_dict(path4)
+    p = d['1336600']
+    print (find_phase_shift(p, 1336600))
+
+
+if __name__ == '__main__':
+    main()
