@@ -59,7 +59,8 @@ def harmonic_fit(df, x='t', y='x', a0=3, w0=1.1, p0=0, c0=0, display=False):
     r_squred = r2_score(df[y], fit)
     
     if r_squred < 0.90:
-        print(f"Warning: R^2 is {r_squred}: for frequency{w0}")
+        logging.warning(f"R^2 is {r_squred}: for frequency{w0}")
+        return None
 
     if display:
 
@@ -108,6 +109,7 @@ def extract_data_from_fit(func_dict, df, w, a0_1=1, p0_1=0, c0_1=0, a0_2=1, p0_2
             if val > limit[name][1] or val < limit[name][0]:
                 logging.warning(f"{name} is out of range for frequency {w}")
                 return None
+
         result_dict[name] = val
 
     return result_dict
@@ -189,6 +191,7 @@ def main():
     phases = []
     frequencies = []
     amplitudes = []
+    faild_fits = {}
 
     def find_phase(w,a1,p1,c1,a2,p2,c2):
         f = 2 * np.pi / w 
@@ -209,6 +212,10 @@ def main():
             frequencies.append(float(freq))
             phases.append(result['phase'])
             amplitudes.append(result['z'])
+        
+        else:
+            faild_fits[freq] = df
+
     
     print (frequencies)
     print (phases)
