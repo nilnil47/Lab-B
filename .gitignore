@@ -145,3 +145,7 @@ ui-tests/playwright-report
 *.aux
 *.log
 *.fdb_latexmk
+
+
+*.bmp
+*.mwi
