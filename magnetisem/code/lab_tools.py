@@ -6,6 +6,7 @@ from scipy.optimize import curve_fit
 from sklearn.metrics import r2_score
 import os
 import logging
+import pickle
 
 logging.basicConfig(level=logging.WARNING)
 
@@ -47,7 +48,10 @@ def harmonic(t, a, w, p, c):
     return a * np.cos(w * t + p) + c 
 
 
-def harmonic_fit(df, x='t', y='x', a0=3, w0=1.1, p0=0, c0=0, display=False):
+def harmonic_fit(df, x='t', y='x', a0=None, w0=1.1, p0=0, c0=0, display=False):
+    if a0 is None:
+        a0 = np.abs(np.min(df[y]) - np.max(df[y])) / 20
+
     try:
         fit_params, covariances = curve_fit(harmonic, df[x], df[y], p0=[a0, w0, p0, c0],
                                             bounds=([0, 0, -2 * np.pi, -np.inf], [np.inf, np.inf, 2 * np.pi, np.inf]))
@@ -57,10 +61,6 @@ def harmonic_fit(df, x='t', y='x', a0=3, w0=1.1, p0=0, c0=0, display=False):
         
     fit = harmonic(df[x], *fit_params)
     r_squred = r2_score(df[y], fit)
-    
-    if r_squred < 0.90:
-        logging.warning(f"R^2 is {r_squred}: for frequency{w0}")
-        return None
 
     if display:
 
@@ -68,7 +68,12 @@ def harmonic_fit(df, x='t', y='x', a0=3, w0=1.1, p0=0, c0=0, display=False):
         plt.plot(df[x], fit)
         plt.plot(df[x], df[y])
         plt.show()
+
+        print(f'Fitted parameters: a = {fit_params[0]:.3f}, w = {fit_params[1]:.3f}, p = {fit_params[2]:.3f}, c = {fit_params[3]:.3f}')
     
+    if r_squred < 0.90:
+        logging.warning(f"R^2 is {r_squred}: for frequency{w0}")
+        return None
 
     return fit_params
 
@@ -85,6 +90,7 @@ def find_phase_shift_index(df, p1, p2, w):
     return n
 
 def extract_data_from_fit(func_dict, df, w, a0_1=1, p0_1=0, c0_1=0, a0_2=1, p0_2=0, c0_2=0, display=True, limit=None):
+    
     params_1 = harmonic_fit(df, x='t', y='x', a0=a0_1, w0=2*np.pi*w, p0=p0_1, c0=c0_1, display=display)
     params_2 = harmonic_fit(df, x='t', y='y', a0=a0_2, w0=2*np.pi*w, p0=p0_2, c0=c0_1, display=display)
 
@@ -179,47 +185,48 @@ def find_peak(y_axis, x_axis):
     return peak
 
 def main():
-    print(os.getcwd())
-    path4 = '/Users/user/Documents/semster_c/courses/lab/magnetisem/extension2/first/'
+    # print(os.getcwd())
+    # path4 = '/Users/user/Documents/semster_c/courses/lab/magnetisem/extension2/first/'
 
-    path = '../extension2/first/'
-    path2 = '../extension2/second/'
-    path3 = '../extension2/all/'
+    # path = '../extension2/first/'
+    # path2 = '../extension2/second/'
+    # path3 = '../extension2/all/'
 
-    # d = lab_tools.read_to_dict(path)
-    d = read_to_dict(path4)
-    phases = []
-    frequencies = []
-    amplitudes = []
-    faild_fits = {}
+    # # d = lab_tools.read_to_dict(path)
+    # d = read_to_dict(path4)
+    # phases = []
+    # frequencies = []
+    # amplitudes = []
+    # faild_fits = {}
 
-    def find_phase(w,a1,p1,c1,a2,p2,c2):
-        f = 2 * np.pi / w 
-        return f * (p1 - p2)
+    # def find_phase(w,a1,p1,c1,a2,p2,c2):
+    #     f = 2 * np.pi / w 
+    #     return f * (p1 - p2)
 
-    def find_z(w,a1,p1,c1,a2,p2,c2):
-        return a2 / a1 
+    # def find_z(w,a1,p1,c1,a2,p2,c2):
+    #     return a2 / a1 
 
-    funcs = {'phase': find_phase, 'z': find_z}
-    limits = {'z': [0, 10000]}
+    # funcs = {'phase': find_phase, 'z': find_z}
+    # limits = {'z': [0, 10000]}
 
-    for freq, df in d.items():
-        freq = float(freq)
-        logging.info(f"frequency is {freq}")
-        result = extract_data_from_fit(funcs, df, freq, display=False)
+    # for freq, df in d.items():
+    #     freq = float(freq)
+    #     logging.info(f"frequency is {freq}")
+    #     result = extract_data_from_fit(funcs, df, freq, display=False)
 
-        if result:
-            frequencies.append(float(freq))
-            phases.append(result['phase'])
-            amplitudes.append(result['z'])
+    #     if result:
+    #         frequencies.append(float(freq))
+    #         phases.append(result['phase'])
+    #         amplitudes.append(result['z'])
         
-        else:
-            faild_fits[freq] = df
+    #     else:
+    #         faild_fits[freq] = df
+
+    failed = pickle.load(open('/Users/user/Documents/semster_c/courses/lab/magnetisem/code/pickles/failed.pickle', 'rb'))
+    harmonic_fit(failed['1836600'], w0=10000000, display=True)
 
     
-    print (frequencies)
-    print (phases)
-    print (amplitudes)
+    
 
 if __name__ == '__main__':
     main()
