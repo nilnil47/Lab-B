@@ -227,6 +227,12 @@ def main():
 
     
     
-
-if __name__ == '__main__':
-    main()
+def find_amp(d):
+    amplitude = []
+    frequency = []
+    R = 19
+    for x in d.keys():
+        amp1 = abs((max(d[x]['y']) - min(d[x]['y'])))
+        amp2 = abs((max(d[x]['x']) - min(d[x]['x'])))
+        frequency.append(int(x))
+        amplitude.append(R * (amp1 / amp2))
