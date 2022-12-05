@@ -5,8 +5,11 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from sklearn.metrics import r2_score
 import os
+import uncertainties as unc
 import logging
 import pickle
+
+from uncertainties import unumpy
 
 logging.basicConfig(level=logging.WARNING)
 
@@ -222,8 +225,9 @@ def main():
     #     else:
     #         faild_fits[freq] = df
 
-    failed = pickle.load(open('/Users/user/Documents/semster_c/courses/lab/magnetisem/code/pickles/failed.pickle', 'rb'))
-    harmonic_fit(failed['1836600'], w0=10000000, display=True)
+    # failed = pickle.load(open('/Users/user/Documents/semster_c/courses/lab/magnetisem/code/pickles/failed.pickle', 'rb'))
+    # harmonic_fit(failed['1836600'], w0=10000000, display=True)
+    pass
 
     
     
@@ -235,9 +239,28 @@ def find_amp(d):
     for x in d.keys():
         amp1 = abs((max(d[x]['y']) - min(d[x]['y'])))
         amp2 = abs((max(d[x]['x']) - min(d[x]['x'])))
-        temperature.append(float(x))
+        temperature.append(-float(x))
         amplitude.append(R * (amp1 / amp2))
     df['temperature'] = temperature
     df['amplitude'] = amplitude
 
     return df
+
+def load_pickle(name):
+    with open(os.path.join('pickles',f'{name}.pickle'), 'rb') as handle:
+        return pickle.load(handle)
+
+def save_pickle(name):
+    with open(os.path.join('pickles',f'{name}.pickle'), 'wb') as handle:
+        return pickle.dump(handle)
+
+class Constants:
+    R = unc.ufloat(19, 0.1)
+    N = unc.ufloat(50, 1)
+    class Termo:
+        a_in = 5
+        f_in = 507517
+
+def uplot(x_ufloats, y_ufloats):
+    plt.errorbar( unumpy.nominal_values(x_ufloats), unumpy.nominal_values(y_ufloats),
+      xerr=unumpy.std_devs(x_ufloats), yerr= unumpy.std_devs(y_ufloats), fmt='o')  
