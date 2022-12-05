@@ -228,11 +228,16 @@ def main():
     
     
 def find_amp(d):
+    df = pd.DataFrame(columns=['temperature', 'amplitude'])
     amplitude = []
-    frequency = []
+    temperature = []
     R = 19
     for x in d.keys():
         amp1 = abs((max(d[x]['y']) - min(d[x]['y'])))
         amp2 = abs((max(d[x]['x']) - min(d[x]['x'])))
-        frequency.append(int(x))
+        temperature.append(float(x))
         amplitude.append(R * (amp1 / amp2))
+    df['temperature'] = temperature
+    df['amplitude'] = amplitude
+
+    return df
