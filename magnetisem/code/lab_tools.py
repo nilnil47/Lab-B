@@ -9,6 +9,7 @@ import uncertainties as unc
 import logging
 import pickle
 
+import plotly.express as px
 from uncertainties import unumpy
 
 logging.basicConfig(level=logging.WARNING)
@@ -240,15 +241,11 @@ def get_temperature_from_file_names(d):
 def find_amp(d):
     df = pd.DataFrame(columns=['temperature', 'amplitude'])
     amplitude = []
-    temperature = []
     for x in d.keys():
         amp_out = abs((max(d[x]['x']) - min(d[x]['x'])))
-        temperature.append(-float(x))
         amplitude.append(Constants.R * (Constants.Termo.a_in / amp_out))
-    df['temperature'] = temperature
-    df['amplitude'] = amplitude
 
-    return df
+    return amplitude
 
 def load_pickle(name):
     with open(os.path.join('pickles',f'{name}.pickle'), 'rb') as handle:
