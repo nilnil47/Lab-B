@@ -229,18 +229,22 @@ def main():
     # harmonic_fit(failed['1836600'], w0=10000000, display=True)
     pass
 
-    
+
+def get_temperature_from_file_names(d):
+    temperatures = []
+
+    for x in d.keys():
+        temperatures.append(-float(x))
+    return temperatures
     
 def find_amp(d):
     df = pd.DataFrame(columns=['temperature', 'amplitude'])
     amplitude = []
     temperature = []
-    R = 19
     for x in d.keys():
-        amp1 = abs((max(d[x]['y']) - min(d[x]['y'])))
-        amp2 = abs((max(d[x]['x']) - min(d[x]['x'])))
+        amp_out = abs((max(d[x]['x']) - min(d[x]['x'])))
         temperature.append(-float(x))
-        amplitude.append(R * (amp1 / amp2))
+        amplitude.append(Constants.R * (Constants.Termo.a_in / amp_out))
     df['temperature'] = temperature
     df['amplitude'] = amplitude
 
@@ -255,11 +259,15 @@ def save_pickle(name):
         return pickle.dump(handle)
 
 class Constants:
-    R = unc.ufloat(19, 0.1)
+    R = unc.ufloat(19, 0.005 * 19)
     N = unc.ufloat(50, 1)
+    L = unc.ufloat(0.0125, 0.005 * 0.0125)
+    
+    # the errors from the signal generator are really small
     class Termo:
         a_in = 5
         f_in = 507517
+    
 
 def uplot(x_ufloats, y_ufloats):
     plt.errorbar( unumpy.nominal_values(x_ufloats), unumpy.nominal_values(y_ufloats),
