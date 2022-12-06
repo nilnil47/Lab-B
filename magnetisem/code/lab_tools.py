@@ -8,9 +8,13 @@ import os
 import uncertainties as unc
 import logging
 import pickle
+import math
 
 import plotly.express as px
 from uncertainties import unumpy
+from uncertainties import ufloat
+from scipy.constants import mu_0 as mu_0
+
 
 logging.basicConfig(level=logging.WARNING)
 
@@ -256,9 +260,12 @@ def save_pickle(name):
         return pickle.dump(handle)
 
 class Constants:
-    R = unc.ufloat(19, 0.005 * 19)
-    N = unc.ufloat(50, 1)
-    L = unc.ufloat(0.0125, 0.005 * 0.0125)
+    L = ufloat(0.0125,0.00025)
+    R = ufloat(19.2,0.096)
+    r = ufloat(0.03,0.003)
+    A = 2*math.pi*(r**2)
+    l = 2*r
+    N_square = (L*l)/(A*mu_0)
     
     # the errors from the signal generator are really small
     class Termo:
