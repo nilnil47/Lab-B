@@ -1,0 +1,265 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass heb-article
+\use_default_options true
+\maintain_unincluded_children false
+\language hebrew
+\language_package default
+\inputencoding default
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1cm
+\rightmargin 1cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+קולקוויום - קיטוב
+\end_layout
+
+\begin_layout Section
+פאסה של גל
+\end_layout
+
+\begin_layout Standard
+כאשר משוואת הגל היא 
+\begin_inset Formula $\psi=f\left(x+ct\right)e^{i\phi}$
+\end_inset
+
+ אז הפסה היא 
+\begin_inset Formula $\phi$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+גלים מישוריים
+\end_layout
+
+\begin_layout Standard
+גל מישורי הוא גל שנפרש רק על מישור
+\end_layout
+
+\begin_layout Section
+סוגי קיטובים
+\end_layout
+
+\begin_layout Standard
+הסוג נקבע לפי סוג לולאת הלאסאג'ו:
+\begin_inset Formula 
+\[
+x=A\sin(at+\delta),\quad y=B\sin(bt)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+קיטוב ליניארי 
+\end_layout
+
+\begin_layout Standard
+יחס פאזה 
+\numeric on
+-
+\numeric off
+ אין הפרש פאזה )אם האמפליתודות שוות(
+\end_layout
+
+\begin_layout Subsubsection
+יחס פאזה: אין הפרש פאזה
+\end_layout
+
+\begin_layout Subsubsection
+משוואות: 
+\begin_inset Formula 
+\[
+\begin{gathered}\overrightarrow{\mathbf{E}}_{\mathrm{r}}(z,t)=\hat{\mathbf{i}}E_{0x}\cos(kz-\omega t)\\
+\overrightarrow{\mathbf{E}}_{\mathrm{r}}(z,t)=\hat{\jmath}E_{0y}\cos(kz-\omega t+\varepsilon)
+\end{gathered}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+משוואות לשדה החשמלי - 
+\end_layout
+
+\begin_layout Subsection
+קיטוב מעגלי
+\end_layout
+
+\begin_layout Standard
+בהנחה שהאמפליטודה שווה, אז יש הפרש פאזה של 
+\begin_inset Formula $\frac{\pi}{2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+קיטוב אלפטי 
+\end_layout
+
+\begin_layout Standard
+בהנחה שהאמפליטודה זהה יש הפרש פאזה של 
+\begin_inset Formula $0<\phi<\frac{\pi}{2}$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Section
+תופעת 
+\begin_inset Formula $DICHROISM$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+מכתב על ידי בליעה של האור במקום על ידי העברה שלו
+\end_layout
+
+\begin_layout Subsection
+ציר אופטי - הציר שביחס אליו מוגדר מישור הייחוס
+\end_layout
+
+\begin_layout Subsection
+מכתב מסוג פולרוייד מעביר
+\family roman
+\series bold
+\shape up
+\size large
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\begin_inset Formula $50$
+\end_inset
+
+אחוז מהאור ובולע 
+\begin_inset Formula $50$
+\end_inset
+
+אחוז מהאור )עבור אור נטרילי( - יש תלות של יחס הבליעה והעברה באורך הגל.
+ יש לו ציר בולע וציר מעביר ולכן רק אם האור כבר מקוטב ליניארית אז הקיטוב
+ לאולר הפולורייד ישאר ליניארי ואם לא אז ההואר אחרי הפולורייד לא ישאר מקטוב
+ ליניארית
+\end_layout
+
+\begin_layout Section
+חוק מאלוס 
+\end_layout
+
+\begin_layout Standard
+עבור מקטב 
+\end_layout
+
+\begin_layout Section
+שאלות כלליות
+\end_layout
+
+\begin_layout Standard
+מה זה אומר שאור הוא לא מקוטב )האם הכוונה לקיטוב ליניארי?(
+\end_layout
+
+\begin_layout Standard
+איך הקיטוב מתבטא ביחס ל 
+\begin_inset Formula 
+\[
+\vec{E}(z,t)=\left|E_{0,x}\right|\cos\left(k_{1}z-\omega t+\phi_{x}\right)\hat{x}+\left|E_{0,y}\right|\cos\left(k_{2}z-\omega t+\phi_{y}\right)\hat{y}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+מה ההבדל בין הפרש הפאזה לכיוון הקיטוב?
+\end_layout
+
+\begin_layout Standard
+מה קורה במקטב פולורייד כאשר מגיעים מקבילים לכיוון הקיטוב
+\end_layout
+
+\end_body
+\end_document
