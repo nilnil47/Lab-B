@@ -109,7 +109,7 @@ def extract_data_from_fit(func_dict, df, w, a0_1=1, p0_1=0, c0_1=0, a0_2=1, p0_2
 
     for name, func in func_dict.items():
         
-        val  = func(w,a1,p1,c1,a2,p2,c2)
+        val  = func(w,a1,w1,p1,c1,a2,w2,p2,c2)
         
         if limit and name in limit:
             if val > limit[name][1] or val < limit[name][0]:
